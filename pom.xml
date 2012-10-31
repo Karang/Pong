@@ -2,17 +2,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- Project information -->
-	<name>Vanilla</name>
-	<groupId>org.spout</groupId>
-	<artifactId>vanilla</artifactId>
-	<version>1.3.2-SNAPSHOT</version>
+	<name>Pong</name>
+	<groupId>fr.karang</groupId>
+	<artifactId>pong</artifactId>
+	<version>SNAPSHOT</version>
 	<url>http://www.spout.org</url>
 	<inceptionYear>2011</inceptionYear>
-	<description>Vanilla is a plugin for the Spout platform that provides vanilla Minecraft functionality.</description>
+	<description>Pong is a plugin for Spout. It's a remake of the famous game of the same name.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mainClass>org.spout.vanilla.VanillaPlugin</mainClass>
+		<mainClass>fr.karang.pong.PongPlugin</mainClass>
 		<spoutVersion>dev-SNAPSHOT</spoutVersion>
 		<protocolVersion>39</protocolVersion>
 		<buildNumber>0</buildNumber>
@@ -20,7 +20,7 @@
 
 	<!-- Organization -->
 	<organization>
-		<name>VanillaDev</name>
+		<name>Karang</name>
 		<url>http://www.spout.org</url>
 	</organization>
 
@@ -36,22 +36,10 @@
 
 	<!-- Source code -->
 	<scm>
-		<developerConnection>scm:git:git@github.com:SpoutDev/Vanilla.git</developerConnection>
-		<connection>scm:git:git://github.com/SpoutDev/Vanilla.git</connection>
-		<url>https://github.com/SpoutDev/Vanilla</url>
+		<developerConnection>scm:git:git@github.com:Karang/Pong.git</developerConnection>
+		<connection>scm:git:git://github.com/Karang/Pong.git</connection>
+		<url>https://github.com/Karang/Pong</url>
 	</scm>
-
-	<!-- Continuous integration -->
-	<ciManagement>
-		<system>jenkins</system>
-		<url>http://build.spout.org/job/Vanilla</url>
-	</ciManagement>
-
-	<!-- Issue management -->
-	<issueManagement>
-		<system>jira</system>
-		<url>http://issues.spout.org/browse/Vanilla</url>
-	</issueManagement>
 
 	<!-- Repository locations -->
 	<repositories>

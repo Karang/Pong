@@ -6,7 +6,7 @@ website: ${project.organization.url}
 
 main: ${mainClass}
 load: startup
-platform: BOTH
+platform: CLIENT
 
 data:
     protocol: ${protocolVersion}
