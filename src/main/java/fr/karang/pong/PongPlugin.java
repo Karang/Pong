@@ -45,8 +45,11 @@ import fr.karang.pong.component.BallComponent;
 import fr.karang.pong.component.ControlPaddleComponent;
 
 public class PongPlugin extends CommonPlugin {
+	private static PongPlugin instance;
+	
 	private RenderMaterial material;
 	private Client client;
+	private float ratio = 0.75f;
 	
 	// Objects
 	private Widget ball;
@@ -54,13 +57,56 @@ public class PongPlugin extends CommonPlugin {
 	private Widget player2;
 	private LabelComponent score;
 	
+	public static PongPlugin getInstance() {
+		return instance;
+	}
+	
+	public Widget getBall() {
+		return ball;
+	}
+	
+	public Widget getPlayer(int player) {
+		if (player==1)
+			return player1;
+		return player2;
+	}
+	
+	public void resetScore() {
+		score.setText(ChatStyle.GRAY + "0 | 0");
+	}
+	
+	public void resetGame() {
+		ball.get(TexturedRectComponent.class).setSprite(new Rectangle(0, 0, 0.1f*ratio, 0.1f));
+		ball.get(BallComponent.class).reset();
+		player1.get(TexturedRectComponent.class).setSprite(new Rectangle(-0.8f*ratio, -0.25f, 0.1f*ratio, 0.5f));
+		player2.get(TexturedRectComponent.class).setSprite(new Rectangle(0.7f*ratio, -0.25f, 0.1f*ratio, 0.5f));
+	}
+	
+	public void addScore(int player) {
+		String[] playerScores = score.getText().substring(2).split(" ");
+		int p1 = Integer.parseInt(playerScores[0]);
+		int p2 = Integer.parseInt(playerScores[2]);
+		if (player==1) {
+			p1++;
+		} else if (player==2) {
+			p2++;
+		}
+		
+		score.setText(ChatStyle.GRAY + "" + p1 + " | " + p2);
+		resetGame();
+		
+		if (p1==3 || p2==3) {
+			resetScore();
+		}
+	}
+	
 	public void onLoad() {
 		client = (Client)Spout.getEngine();
+		instance = this;
 	}
 	
 	@Override
 	public void onEnable() {
-		float ratio = 0.75f;
 		Screen pongScreen = new Screen();
 		material = (RenderMaterial) Spout.getFilesystem().getResource("material://Pong/resources/pong.smt");
 		Font font = (Font) Spout.getFilesystem().getResource("font://Spout/resources/resources/fonts/ubuntu/Ubuntu-M.ttf");

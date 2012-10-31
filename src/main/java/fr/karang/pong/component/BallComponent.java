@@ -32,9 +32,12 @@ import org.spout.api.component.components.WidgetComponent;
 import org.spout.api.gui.component.TexturedRectComponent;
 import org.spout.api.math.Rectangle;
 
+import fr.karang.pong.PongPlugin;
+
 public class BallComponent extends WidgetComponent {
 	private Random rand = new Random();
 	
+	private PongPlugin plugin;
 	private TexturedRectComponent rect;
 	private float w;
 	private float h;
@@ -45,9 +48,15 @@ public class BallComponent extends WidgetComponent {
 	
 	@Override
 	public void onAttached() {
+		plugin = PongPlugin.getInstance();
 		rect = getOwner().get(TexturedRectComponent.class);
 		w = rect.getSprite().getWidth();
 		h = rect.getSprite().getHeight();
+	}
+
+	public void reset() {
+		dx = rand.nextFloat();
+		dy = rand.nextFloat();
 	}
 	
 	@Override
@@ -55,17 +64,19 @@ public class BallComponent extends WidgetComponent {
 		float x = rect.getSprite().getX();
 		float y = rect.getSprite().getY();
 		
-		float norm = (float) Math.sqrt(dx*dx+dy*dy);
+		float norm = (float) Math.sqrt(dx*dx + dy*dy);
 		x += dx * speed * dt / norm; 
 		y += dy * speed * dt / norm;
 		
 		if (x>1f-w) { // RIGHT
-			x = 1f-w;
-			dx = -rand.nextFloat();
+			//x = 1f-w;
+			//dx = -rand.nextFloat();
+			plugin.addScore(1);
 		}
 		if (x<-1f) { // LEFT
-			x = -1f;
-			dx = rand.nextFloat();
+			//x = -1f;
+			//dx = rand.nextFloat();
+			plugin.addScore(2);
 		}
 		if (y>1f-h) { // UP
 			y = 1f-h;
@@ -77,5 +88,6 @@ public class BallComponent extends WidgetComponent {
 		}
 				
 		rect.setSprite(new Rectangle(x, y, w, h));
+		getOwner().update();
 	}
 }
