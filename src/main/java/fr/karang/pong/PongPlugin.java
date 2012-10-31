@@ -40,7 +40,9 @@ import org.spout.api.plugin.CommonPlugin;
 import org.spout.api.render.Font;
 import org.spout.api.render.RenderMaterial;
 
+import fr.karang.pong.component.AiPaddleComponent;
 import fr.karang.pong.component.BallComponent;
+import fr.karang.pong.component.ControlPaddleComponent;
 
 public class PongPlugin extends CommonPlugin {
 	private RenderMaterial material;
@@ -80,20 +82,23 @@ public class PongPlugin extends CommonPlugin {
 		p1Rect.setSprite(new Rectangle(-0.8f*ratio, -0.25f, 0.1f*ratio, 0.5f));
 		p1Rect.setSource(new Rectangle(0, 0, 8f/32f, 1f));
 		p1Rect.setColor(Color.BLUE);
+		player1.add(ControlPaddleComponent.class);
 		pongScreen.attachWidget(this, player1);
+		
 		player2 = new Widget();
 		TexturedRectComponent p2Rect = player2.add(TexturedRectComponent.class);
 		p2Rect.setRenderMaterial(material);
 		p2Rect.setSprite(new Rectangle(0.7f*ratio, -0.25f, 0.1f*ratio, 0.5f));
 		p2Rect.setSource(new Rectangle(0, 0, 8f/32f, 1f));
 		p2Rect.setColor(Color.RED);
+		player2.add(AiPaddleComponent.class);
 		pongScreen.attachWidget(this, player2);
 		
 		// Construct the interface
 		Widget scoreWidget = new Widget();
 		score = scoreWidget.add(LabelComponent.class);
 		score.setFont(font);
-		score.setText(ChatStyle.GRAY+"0 | 0");
+		score.setText(ChatStyle.GRAY + "0 | 0");
 		pongScreen.attachWidget(this, scoreWidget);
 		
 		client.getScreenStack().openScreen(pongScreen);
