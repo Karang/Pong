@@ -36,6 +36,7 @@ import fr.karang.pong.PongPlugin;
 
 public class BallComponent extends WidgetComponent {
 	private Random rand = new Random();
+	private float ratio = 0.75f;
 	
 	private PongPlugin plugin;
 	private TexturedRectComponent rect;
@@ -43,8 +44,8 @@ public class BallComponent extends WidgetComponent {
 	private float h;
 	
 	private float speed = 0.001f;
-	private float dx = rand.nextFloat();
-	private float dy = rand.nextFloat();
+	private float dx;
+	private float dy;
 	
 	@Override
 	public void onAttached() {
@@ -52,11 +53,13 @@ public class BallComponent extends WidgetComponent {
 		rect = getOwner().get(TexturedRectComponent.class);
 		w = rect.getSprite().getWidth();
 		h = rect.getSprite().getHeight();
+		reset();
 	}
-
+	
 	public void reset() {
-		dx = rand.nextFloat();
-		dy = rand.nextFloat();
+		double angle = rand.nextInt(121)-60;
+		dx = (float) Math.cos(Math.toRadians(angle));
+		dy = (float) Math.sin(Math.toRadians(angle));
 	}
 	
 	@Override
@@ -64,29 +67,46 @@ public class BallComponent extends WidgetComponent {
 		float x = rect.getSprite().getX();
 		float y = rect.getSprite().getY();
 		
-		float norm = (float) Math.sqrt(dx*dx + dy*dy);
-		x += dx * speed * dt / norm; 
-		y += dy * speed * dt / norm;
+		x += dx * speed * dt; 
+		y += dy * speed * dt;
+		
+		if (x>0.7f*ratio-w && x<0.8*ratio-w) { // AI
+			Rectangle paddle = plugin.getPlayer(2).get(TexturedRectComponent.class).getSprite();
+			if (y>paddle.getY()-h && y<paddle.getY()+paddle.getHeight()) {
+				x = 0.7f*ratio-w;
+				dx = -dx;
+			}
+		}
+		
+		if (x>-0.8f*ratio && x<-0.7*ratio) { // Player
+			Rectangle paddle = plugin.getPlayer(1).get(TexturedRectComponent.class).getSprite();
+			if (y>paddle.getY()-h && y<paddle.getY()+paddle.getHeight()) {
+				x = -0.7f*ratio;
+				dx = -dx;
+			}
+		}
 		
 		if (x>1f-w) { // RIGHT
-			//x = 1f-w;
-			//dx = -rand.nextFloat();
 			plugin.addScore(1);
+			x = 0;
+			y = 0;
+			reset();
 		}
 		if (x<-1f) { // LEFT
-			//x = -1f;
-			//dx = rand.nextFloat();
 			plugin.addScore(2);
+			x = 0;
+			y = 0;
+			reset();
 		}
 		if (y>1f-h) { // UP
 			y = 1f-h;
-			dy = -rand.nextFloat();
+			dy = -dy;
 		}
 		if (y<-1f) { // DOWN
 			y = -1f;
-			dy = rand.nextFloat();
+			dy = -dy;
 		}
-				
+		
 		rect.setSprite(new Rectangle(x, y, w, h));
 		getOwner().update();
 	}

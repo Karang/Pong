@@ -38,6 +38,9 @@ public class AiPaddleComponent extends WidgetComponent {
 	private TexturedRectComponent ball;
 	private TexturedRectComponent paddle;
 	
+	private float dy = 0;
+	private float speed = 0.0005f;
+	
 	@Override
 	public void onAttached() {
 		plugin = PongPlugin.getInstance();
@@ -47,10 +50,20 @@ public class AiPaddleComponent extends WidgetComponent {
 	
 	@Override
 	public void onTick(float dt) {
-		/*float x = paddle.getSprite().getX();
-		float y = ball.getSprite().getY();
 		float w = paddle.getSprite().getWidth();
 		float h = paddle.getSprite().getHeight();
+		float x = paddle.getSprite().getX();
+		float y = paddle.getSprite().getY();
+		
+		if (y+h/2-ball.getSprite().getY()>0.05f) {
+			dy = -1f;
+		} else if (y+h/2-ball.getSprite().getY()<0.05f) {
+			dy = 1f;
+		} else {
+			dy = 0f;
+		}
+		
+		y += dy * speed * dt;
 		
 		if (y>1f-h) {
 			y = 1f-h;
@@ -59,7 +72,7 @@ public class AiPaddleComponent extends WidgetComponent {
 			y = -1f;
 		}
 		
-		paddle.setSprite(new Rectangle(x, y, w, h));*/
+		paddle.setSprite(new Rectangle(x, y, w, h));
 		getOwner().update();
 	}
 }

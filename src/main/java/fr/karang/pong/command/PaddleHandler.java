@@ -24,44 +24,30 @@
  * License and see <http://www.spout.org/SpoutDevLicenseV1.txt> for the full license,
  * including the MIT license.
  */
-package fr.karang.pong.component;
+package fr.karang.pong.command;
 
-import org.spout.api.component.components.WidgetComponent;
-import org.spout.api.gui.component.TexturedRectComponent;
-import org.spout.api.math.Rectangle;
+import org.spout.api.command.Command;
+import org.spout.api.command.CommandContext;
+import org.spout.api.command.CommandExecutor;
+import org.spout.api.command.CommandSource;
+import org.spout.api.exception.CommandException;
+import org.spout.api.gui.Widget;
 
-public class ControlPaddleComponent extends WidgetComponent {
+import fr.karang.pong.component.ControlPaddleComponent;
+
+public class PaddleHandler implements CommandExecutor {
+
+	private final ControlPaddleComponent paddle;
+	private final float dy;
 	
-	private TexturedRectComponent paddle;
-	private float dy = 0;
-	private float speed = 0.001f;
-	
-	@Override
-	public void onAttached() {
-		paddle = getOwner().get(TexturedRectComponent.class);
-	}
-	
-	public void setDy(float dy) {
+	public PaddleHandler(Widget paddle, float dy) {
+		this.paddle = paddle.get(ControlPaddleComponent.class);
 		this.dy = dy;
 	}
 	
 	@Override
-	public void onTick(float dt) {
-		float w = paddle.getSprite().getWidth();
-		float h = paddle.getSprite().getHeight();
-		float x = paddle.getSprite().getX();
-		float y = paddle.getSprite().getY();
-		
-		y += dy * speed * dt;
-		
-		if (y>1f-h) {
-			y = 1f-h;
-		}
-		if (y<-1f) {
-			y = -1f;
-		}
-		
-		paddle.setSprite(new Rectangle(x, y, w, h));
-		getOwner().update();
+	public void processCommand(CommandSource source, Command command, CommandContext args) throws CommandException {
+		paddle.setDy(dy);
 	}
+
 }

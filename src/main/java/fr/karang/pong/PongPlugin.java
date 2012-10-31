@@ -37,9 +37,11 @@ import org.spout.api.gui.component.LabelComponent;
 import org.spout.api.gui.component.TexturedRectComponent;
 import org.spout.api.math.Rectangle;
 import org.spout.api.plugin.CommonPlugin;
+import org.spout.api.plugin.Platform;
 import org.spout.api.render.Font;
 import org.spout.api.render.RenderMaterial;
 
+import fr.karang.pong.command.PaddleHandler;
 import fr.karang.pong.component.AiPaddleComponent;
 import fr.karang.pong.component.BallComponent;
 import fr.karang.pong.component.ControlPaddleComponent;
@@ -76,10 +78,10 @@ public class PongPlugin extends CommonPlugin {
 	}
 	
 	public void resetGame() {
-		ball.get(TexturedRectComponent.class).setSprite(new Rectangle(0, 0, 0.1f*ratio, 0.1f));
-		ball.get(BallComponent.class).reset();
 		player1.get(TexturedRectComponent.class).setSprite(new Rectangle(-0.8f*ratio, -0.25f, 0.1f*ratio, 0.5f));
+		player1.update();
 		player2.get(TexturedRectComponent.class).setSprite(new Rectangle(0.7f*ratio, -0.25f, 0.1f*ratio, 0.5f));
+		player2.update();
 	}
 	
 	public void addScore(int player) {
@@ -148,6 +150,18 @@ public class PongPlugin extends CommonPlugin {
 		pongScreen.attachWidget(this, scoreWidget);
 		
 		client.getScreenStack().openScreen(pongScreen);
+		
+		client.getInput().bind("KEY_UP", "+PongUp");
+		client.getInput().bind("KEY_DOWN", "+PongDown");
+		
+		client.getRootCommand().addSubCommand(client, "+PongUp")
+		.setExecutor(Platform.CLIENT, new PaddleHandler(player1, 1f));
+		client.getRootCommand().addSubCommand(client, "+PongDown")
+		.setExecutor(Platform.CLIENT, new PaddleHandler(player1, -1f));
+		client.getRootCommand().addSubCommand(client, "-PongUp")
+		.setExecutor(Platform.CLIENT, new PaddleHandler(player1, 0f));
+		client.getRootCommand().addSubCommand(client, "-PongDown")
+		.setExecutor(Platform.CLIENT, new PaddleHandler(player1, 0f));
 	}
 
 	@Override
