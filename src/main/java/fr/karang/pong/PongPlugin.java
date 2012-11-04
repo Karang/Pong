@@ -30,6 +30,7 @@ import java.awt.Color;
 
 import org.spout.api.Client;
 import org.spout.api.Spout;
+import org.spout.api.chat.ChatArguments;
 import org.spout.api.chat.style.ChatStyle;
 import org.spout.api.gui.Screen;
 import org.spout.api.gui.Widget;
@@ -59,6 +60,8 @@ public class PongPlugin extends CommonPlugin {
 	private Widget player2;
 	private LabelComponent score;
 	
+	private ChatArguments defaultScore = new ChatArguments(ChatStyle.GRAY, "0", " | ", "0");
+	
 	public static PongPlugin getInstance() {
 		return instance;
 	}
@@ -74,7 +77,7 @@ public class PongPlugin extends CommonPlugin {
 	}
 	
 	public void resetScore() {
-		score.setText(ChatStyle.GRAY + "0 | 0");
+		score.setText(defaultScore);
 	}
 	
 	public void resetGame() {
@@ -85,16 +88,15 @@ public class PongPlugin extends CommonPlugin {
 	}
 	
 	public void addScore(int player) {
-		String[] playerScores = score.getText().substring(2).split(" ");
-		int p1 = Integer.parseInt(playerScores[0]);
-		int p2 = Integer.parseInt(playerScores[2]);
+		int p1 = Integer.parseInt((String) score.getText().getArguments().get(1));
+		int p2 = Integer.parseInt((String) score.getText().getArguments().get(3));
 		if (player==1) {
 			p1++;
 		} else if (player==2) {
 			p2++;
 		}
 		
-		score.setText(ChatStyle.GRAY + "" + p1 + " | " + p2);
+		score.setText(new ChatArguments(ChatStyle.GRAY, p1, " | ", p2));
 		resetGame();
 		
 		if (p1==3 || p2==3) {
@@ -146,7 +148,7 @@ public class PongPlugin extends CommonPlugin {
 		Widget scoreWidget = new Widget();
 		score = scoreWidget.add(LabelComponent.class);
 		score.setFont(font);
-		score.setText(ChatStyle.GRAY + "0 | 0");
+		score.setText(defaultScore);
 		pongScreen.attachWidget(this, scoreWidget);
 		
 		client.getScreenStack().openScreen(pongScreen);
